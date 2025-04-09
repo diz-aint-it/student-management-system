@@ -1,0 +1,17 @@
+# Ignore environment files
+.env
+
+# Ignore composer dependencies
+/vendor/
+
+# Ignore IDE specific files
+.idea/
+.vscode/
+*.swp
+
+# Ignore uploaded files
+/uploads/
+
+# Ignore system files
+.DS_Store
+Thumbs.db
