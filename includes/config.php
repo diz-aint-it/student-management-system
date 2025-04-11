@@ -1,24 +1,35 @@
 <?php
-session_start();
+// Start session only if not already started
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
-// Load environment
-$env = parse_ini_file(__DIR__ . '/../.env');
+// Database configuration
+define('DB_HOST', 'localhost');
+define('DB_NAME', 'student_management');
+define('DB_USER', 'root');
+define('DB_PASS', '');
 
-// Database connection
+// File upload directory (with existence check)
+if (!defined('UPLOAD_DIR')) {
+    define('UPLOAD_DIR', __DIR__ . '/../uploads/');
+}
+
+// Base URL for the application
+define('BASE_URL', 'http://localhost/etudiants-main/');
+
+// Create PDO connection
 try {
     $pdo = new PDO(
-        "mysql:host={$env['DB_HOST']};port={$env['DB_PORT']};dbname={$env['DB_NAME']}",
-        $env['DB_USER'],
-        $env['DB_PASS'],
+        "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME,
+        DB_USER,
+        DB_PASS,
         [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
         ]
     );
 } catch (PDOException $e) {
-    die("Database connection failed.");
+    die("Database connection failed: " . $e->getMessage());
 }
-
-// Constants
-define('UPLOAD_DIR', __DIR__ . '/../uploads/students/');
 ?>

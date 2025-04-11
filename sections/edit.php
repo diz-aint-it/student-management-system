@@ -1,8 +1,12 @@
 <?php
+
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 global $pdo;
 require '../includes/config.php';
 require '../includes/functions.php';
-require '../classes/Section.php';
+require '../classes/sections.php';
 require_admin();
 
 if (!isset($_GET['id'])) {

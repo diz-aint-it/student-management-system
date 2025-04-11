@@ -2,8 +2,8 @@
 global $pdo;
 require '../includes/config.php';
 require '../includes/functions.php';
-require '../classes/Student.php';
-require '../classes/Section.php';
+require '../classes/students.php';
+require '../classes/sections.php';
 require_admin();
 
 if (!isset($_GET['id'])) redirect('index.php');

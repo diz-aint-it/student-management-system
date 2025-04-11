@@ -2,10 +2,21 @@
 global $pdo;
 require '../includes/config.php';
 require '../includes/functions.php';
+require '../classes/Repository.php'; // Ensure Repository class is included
+require '../vendor/autoload.php';
+
+
+// Debugging: Check if the script is being executed
+echo "Export script is running.<br>";
+
 require_auth();
 
 $type = $_GET['type'] ?? 'excel'; // excel, csv, or pdf
 $entity = $_GET['entity'] ?? 'student'; // student or section
+
+// Debugging: Print the values of $type and $entity
+echo "Type: $type<br>";
+echo "Entity: $entity<br>";
 
 // Validate inputs
 if (!in_array($type, ['excel', 'csv', 'pdf'])) die("Invalid export type");
@@ -13,6 +24,11 @@ if (!in_array($entity, ['student', 'section'])) die("Invalid entity");
 
 $repo = new Repository($pdo, $entity);
 $data = $repo->all();
+
+// Debugging: Print the data fetched from the database
+echo "<pre>";
+print_r($data);
+echo "</pre>";
 
 // Filename with timestamp
 $filename = $entity . '_export_' . date('Ymd_His');
@@ -80,3 +96,4 @@ function exportPDF(array $data, string $filename) {
     $pdf->Output('php://output', 'D');
     exit;
 }
+?>

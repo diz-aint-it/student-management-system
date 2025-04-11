@@ -2,7 +2,7 @@
 global $pdo;
 require '../includes/config.php';
 require '../includes/functions.php';
-require '../classes/Student.php';
+require '../classes/students.php';
 require_auth();
 
 if (!isset($_GET['id'])) {

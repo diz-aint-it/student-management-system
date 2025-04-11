@@ -1,17 +1,14 @@
 <?php
+// Include configuration and functions
 global $pdo;
-require '../includes/config.php';
-require '../includes/functions.php';
-require '../classes/Student.php';
-require_auth();
+require_once __DIR__ . '/../includes/config.php';
+require_once __DIR__ . '/../includes/functions.php';
+require_once __DIR__ . '/../classes/students.php'; // Corrected file name
 
-// Pagination
-$page = max(1, $_GET['page'] ?? 1);
-$perPage = 10;
+require_auth(); // Ensure the user is authenticated
 
 $studentModel = new Student($pdo);
-$students = $studentModel->paginate($page, $perPage);
-$totalPages = ceil($studentModel->count() / $perPage);
+$students = $studentModel->paginate(1, 10);
 
 $title = "Students";
 require '../includes/header.php';
@@ -20,14 +17,17 @@ require '../includes/header.php';
     <h1>Students</h1>
 
 <?php if (is_admin()): ?>
-    <a href="create.php" class="btn">Add Student</a>
-    <div class="export-buttons">
-        <a href="/exports/export.php?type=excel&entity=student" class="btn">Export Excel</a>
-        <a href="/exports/export.php?type=pdf&entity=student" class="btn">Export PDF</a>
+    <div class="action-bar">
+        <a href="create.php" class="btn">Add New Student</a>
+        <div class="export-buttons">
+            <a href="<?= BASE_URL ?>/exports/export.php?type=excel&entity=student">Export to Excel</a>
+            <a href="<?= BASE_URL ?>/exports/export.php?type=pdf&entity=student"> or PDF</a>
+        </div>
+
     </div>
 <?php endif; ?>
 
-    <table>
+    <table class="data-table">
         <thead>
         <tr>
             <th>ID</th>
@@ -43,31 +43,19 @@ require '../includes/header.php';
                 <td><?= $student['id'] ?></td>
                 <td><?= sanitize($student['name']) ?></td>
                 <td><?= $student['birthday'] ?></td>
-                <td><?= sanitize($student['section_name'] ?? 'None') ?></td>
-                <td>
-                    <a href="detail.php?id=<?= $student['id'] ?>">View</a>
+                <td><?= sanitize($student['section_name'] ?? 'Not assigned') ?></td>
+                <td class="actions">
+                    <a href="detail.php?id=<?= $student['id'] ?>" class="btn small">View</a>
                     <?php if (is_admin()): ?>
-                        | <a href="edit.php?id=<?= $student['id'] ?>">Edit</a>
-                        | <a href="delete.php?id=<?= $student['id'] ?>"
-                             onclick="return confirm('Delete this student?')">Delete</a>
+                        <a href="edit.php?id=<?= $student['id'] ?>" class="btn small">Edit</a>
+                        <a href="delete.php?id=<?= $student['id'] ?>"
+                           class="btn small danger"
+                           onclick="return confirm('Delete this student?')">Delete</a>
                     <?php endif; ?>
                 </td>
             </tr>
         <?php endforeach; ?>
         </tbody>
     </table>
-
-    <!-- Pagination -->
-    <div class="pagination">
-        <?php if ($page > 1): ?>
-            <a href="?page=<?= $page - 1 ?>" class="btn">Previous</a>
-        <?php endif; ?>
-
-        <span>Page <?= $page ?> of <?= $totalPages ?></span>
-
-        <?php if ($page < $totalPages): ?>
-            <a href="?page=<?= $page + 1 ?>" class="btn">Next</a>
-        <?php endif; ?>
-    </div>
 
 <?php require '../includes/footer.php'; ?>

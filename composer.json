@@ -1,0 +1,7 @@
+{
+
+    "name": "aziz/jouini",
+    "description": "projet web",
+    "type": "project",
+    "require": {"phpoffice/phpspreadsheet": "^1.20"}
+}

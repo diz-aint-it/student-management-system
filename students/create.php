@@ -2,9 +2,11 @@
 global $pdo;
 require '../includes/config.php';
 require '../includes/functions.php';
-require '../classes/Student.php';
-require '../classes/Section.php';
-require_admin();
+require_once(__DIR__ . '/../classes/students.php'); // Corrected file name
+require_once(__DIR__ . '/../classes/sections.php'); // Corrected file name
+
+require_auth(); // Ensure the user is authenticated
+require_admin(); // Ensure the user is an admin
 
 $studentModel = new Student($pdo);
 $sectionModel = new Section($pdo);
@@ -19,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ];
 
     if ($studentModel->create($data)) {
-        redirect('index.php');
+        redirect('students/index.php');
     }
 }
 
@@ -28,7 +30,7 @@ require '../includes/header.php';
 ?>
 
     <h1>Add New Student</h1>
-    <form method="POST" enctype="multipart/form-data">
+    <form method="POST" enctype="multipart/form-data" action="<?= BASE_URL ?>students/create.php">
         <div class="form-group">
             <label>Full Name:
                 <input type="text" name="name" required>
